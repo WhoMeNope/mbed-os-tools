@@ -55,8 +55,6 @@ python_requires = '>=2.7.10, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4'
 setup(name='mbed-host-tests',
       version='1.5.10',
       description=DESCRIPTION,
-      long_description=read('README.md'),
-      long_description_content_type='text/markdown',
       author=OWNER_NAMES,
       author_email=OWNER_EMAILS,
       maintainer=OWNER_NAMES,
