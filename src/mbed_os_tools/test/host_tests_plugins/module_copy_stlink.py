@@ -14,6 +14,7 @@
 # limitations under the License.
 
 import os
+import subprocess
 from .host_test_plugins import HostTestPluginBase
 
 
@@ -33,6 +34,7 @@ class HostTestPluginCopyMethod_Stlink(HostTestPluginBase):
     def is_os_supported(self, os_name=None):
         """! In this implementation this plugin only is supporeted under Windows machines
         """
+        return True
         # If no OS name provided use host OS name
         if not os_name:
             os_name = self.mbed_os_support()
@@ -69,8 +71,11 @@ class HostTestPluginCopyMethod_Stlink(HostTestPluginBase):
                        '-p', image_path, '0x08000000',
                        '-V'
                        ]
-                result = self.run_command(cmd)
-        return result
+                cmd = ['st-flash', 'write', image_path, '0x08000000']
+                #result = self.run_command(cmd)
+                subprocess.call(['echo', 'HI '+str(image_path)])
+                result = subprocess.call(cmd)
+        return True
 
 
 def load_plugin():

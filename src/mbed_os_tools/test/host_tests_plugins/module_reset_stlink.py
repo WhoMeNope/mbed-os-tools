@@ -17,6 +17,7 @@ import os
 import sys
 import tempfile
 from .host_test_plugins import HostTestPluginBase
+import subprocess
 
 FIX_FILE_NAME = "enter_file.txt"
 
@@ -36,6 +37,7 @@ class HostTestPluginResetMethod_Stlink(HostTestPluginBase):
         HostTestPluginBase.__init__(self)
 
     def is_os_supported(self, os_name=None):
+        return True
         """! In this implementation this plugin only is supporeted under Windows machines
         """
         # If no OS name provided use host OS name
@@ -86,16 +88,21 @@ class HostTestPluginResetMethod_Stlink(HostTestPluginBase):
                 # ST-LINK_CLI.exe -Rst -Run
                 cmd = [self.ST_LINK_CLI,
                        '-Rst', '-Run']
-                
+                cmd = ['st-flash', 'reset']
+
                 # Due to the ST-LINK bug, we must press enter after burning the target
                 # We do this here automatically by passing a file which contains an `ENTER` (line separator)
                 # to the ST-LINK CLI as `stdin` for the running process
-                enter_file_path = os.path.join(tempfile.gettempdir(), FIX_FILE_NAME)
-                self.create_stlink_fix_file(enter_file_path)
+                #enter_file_path = os.path.join(tempfile.gettempdir(), FIX_FILE_NAME)
+                #self.create_stlink_fix_file(enter_file_path)
                 try:
-                    with open(enter_file_path, 'r') as fix_file:
-                        stdin_arg = kwargs.get('stdin', fix_file)
-                        result = self.run_command(cmd, stdin = stdin_arg)
+                    #with open(enter_file_path, 'r') as fix_file:
+                    #    stdin_arg = kwargs.get('stdin', fix_file)
+                    #    result = self.run_command(cmd, stdin = stdin_arg)
+                        result = subprocess.call(cmd)
+                      #  subprocess.call(["mount", "/dev/disk/by-id/usb-MBED_microcontroller_066CFF515254667867235029-0:0", "tools/mountF767"])
+                      #  subprocess.call(["umount", "tools/mountF767"])
+
                 except (OSError, IOError):
                     self.print_plugin_error("Error opening STLINK-PRESS-ENTER-BUG file")
                     sys.exit(1)
